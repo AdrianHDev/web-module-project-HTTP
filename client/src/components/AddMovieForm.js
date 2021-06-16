@@ -4,10 +4,9 @@ import { Link } from 'react-router-dom';
 
 import axios from 'axios';
 
-const EditMovieForm = (props) => {
+const AddMovieForm = (props) => {
 	const {setMovies} = props;
 	const { push } = useHistory();
-	const {id} = useParams();
 
 	const [movie, setMovie] = useState({
 		title:"",
@@ -17,11 +16,6 @@ const EditMovieForm = (props) => {
 		description: ""
 	});
 
-	useEffect(() => {
-		axios.get(`http://localhost:5000/api/movies/${id}`)
-			.then(res => setMovie(res.data))
-			.catch(err => console.error(err))
-	}, [])
 	
 	const handleChange = (e) => {
         setMovie({
@@ -33,10 +27,10 @@ const EditMovieForm = (props) => {
     const handleSubmit = (e) => {
 		e.preventDefault();
 		(async () => {
-			const res = await axios.put(`http://localhost:5000/api/movies/${id}`, movie)
+			const res = await axios.post(`http://localhost:5000/api/movies`, movie)
 			const data = res.data
 			setMovies(data);
-			push(`/movies/${id}`)
+			push(`/movies`)
 		})()
 	}
 	
@@ -47,7 +41,7 @@ const EditMovieForm = (props) => {
 		<div className="modal-content">
 			<form onSubmit={handleSubmit}>
 				<div className="modal-header">						
-					<h4 className="modal-title">Editing <strong>{movie.title}</strong></h4>
+					<h4 className="modal-title">Adding a movie!</h4>
 				</div>
 				<div className="modal-body">					
 					<div className="form-group">
@@ -74,11 +68,11 @@ const EditMovieForm = (props) => {
 				</div>
 				<div className="modal-footer">			    
 					<input type="submit" className="btn btn-info" value="Save"/>
-					<Link to={`/movies/1`}><input type="button" className="btn btn-default" value="Cancel"/></Link>
+					<Link to={`/movies`}><input type="button" className="btn btn-default" value="Cancel"/></Link>
 				</div>
 			</form>
 		</div>
 	</div>);
 }
 
-export default EditMovieForm;
+export default AddMovieForm;
